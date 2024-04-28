@@ -11,6 +11,9 @@ namespace STPLoader.Implementation.Converter.Entity
     {
         readonly AdvancedFace _face;
         readonly IStpModel _model;
+        
+        public SurfaceConvertable SurfaceConvertable { get; private set; }
+        public List<BoundConvertable> BoundConvertables { get; private set; }
 
         public AdvancedFaceConvertable(AdvancedFace face, IStpModel model)
         {
@@ -23,10 +26,12 @@ namespace STPLoader.Implementation.Converter.Entity
         {
             IEnumerable<Bound> bounds = _face.BoundIds.Select(_model.Get<Bound>);
             Surface surface = _model.Get<Surface>(_face.SurfaceId);
-            SurfaceConvertable surfaceConvertable = new SurfaceConvertable(surface, _model);
+            SurfaceConvertable = new SurfaceConvertable(surface, _model);
             // create convertable for all faces and merge points and indices
-            List<Tuple<IList<Vector3>, IList<int>>> convertables = bounds.Select(bound => new BoundConvertable(bound, _model)).Select(c => Tuple.New(c.Points, c.Indices)).ToList();
-            convertables.Add(Tuple.New(surfaceConvertable.Points, surfaceConvertable.Indices));
+            BoundConvertables = bounds.Select(bound => new BoundConvertable(bound, _model)).ToList();
+            
+            List<Tuple<IList<Vector3>, IList<int>>> convertables =BoundConvertables.Select(c => Tuple.New(c.Points, c.Indices)).ToList();
+            convertables.Add(Tuple.New(SurfaceConvertable.Points, SurfaceConvertable.Indices));
 
             Points = convertables.Select(c => c.First).SelectMany(p => p).ToList();
             Indices = convertables.Aggregate(Tuple.New(0, new List<int>()), Tuple.AggregateIndices).Second;

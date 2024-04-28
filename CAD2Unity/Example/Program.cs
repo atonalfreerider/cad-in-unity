@@ -1,4 +1,6 @@
-﻿using BasicLoader.Interface;
+﻿using BasicLoader.Implementation.Model;
+using BasicLoader.Interface;
+using STPLoader.Implementation.Converter.Entity;
 using STPLoader.Implementation.Model;
 using STPLoader.Implementation.Model.Entity;
 using STPLoader.Interface;
@@ -18,10 +20,44 @@ namespace Example
             {
                 Dictionary<long, Entity> data = stpFile.Data.All().ToDictionary(x => x.Key, x => x.Value);
                 List<Entity> topLevelEntities = TopLevelEntities(data);
-
+                
                 foreach (Entity entity in topLevelEntities)
                 {
-                    List<Entity> components = Components(entity, data);
+                    IConvertable? convertedEntity = CreateConvertable(entity, stpFile);
+                    
+                    switch (convertedEntity)
+                    {
+                        case AdvancedFaceConvertable advancedFaceConvertable:
+                            break;
+                        case Axis2Placement3DConvertable axis2Placement3DConvertable:
+                            break;
+                        case BoundConvertable boundConvertable:
+                            break;
+                        case CircleConvertable circleConvertable:
+                            break;
+                        case ClosedShellConveratable closedShellConveratable:
+                            break;
+                        case CylindricalSurfaceConvertable cylindricalSurfaceConvertable:
+                            break;
+                        case EdgeCurveConvertable edgeCurveConvertable:
+                            break;
+                        case EdgeLoopConvertable edgeLoopConvertable:
+                            break;
+                        case FaceBoundConvertable faceBoundConvertable:
+                            break;
+                        case FaceOuterBoundConvertable faceOuterBoundConvertable:
+                            break;
+                        case LineConvertable lineConvertable:
+                            break;
+                        case OrientedEdgeConvertable orientedEdgeConvertable:
+                            break;
+                        case PlaneConvertable planeConvertable:
+                            break;
+                        case SurfaceConvertable surfaceConvertable:
+                            break;
+                        case null:
+                            break;
+                    }
                 }
             }
         }
@@ -43,121 +79,57 @@ namespace Example
 
             return data.Values.Where(entity => !referencedIds.Contains(entity.Id)).ToList();
         }
-
-        static List<Entity> Components(Entity entity, Dictionary<long, Entity> data)
+      
+        static IConvertable? CreateConvertable(Entity entity, IStpModel model)
         {
-            List<Entity> components = [];
             switch (entity)
             {
                 case AdvancedFace advancedFace:
-                    foreach (long boundId in advancedFace.BoundIds)
-                    {
-                        Bound bound = data[boundId] as Bound;
-                        components.Add(bound);
-                    }
-                    
-                    Surface advancedFaceSurface = data[advancedFace.SurfaceId] as Surface;
-                    components.Add(advancedFaceSurface);
-
-                    return components;
+                    return new AdvancedFaceConvertable(advancedFace, model);
                 case Axis2Placement3D axis2Placement3D:
-                    CartesianPoint axisPtX = data[axis2Placement3D.PointIds[0]] as CartesianPoint;
-                    CartesianPoint axisPtY = data[axis2Placement3D.PointIds[1]] as CartesianPoint;
-                    CartesianPoint axisPtZ = data[axis2Placement3D.PointIds[2]] as CartesianPoint;
-
-                    components.Add(axisPtX);
-                    components.Add(axisPtY);
-                    components.Add(axisPtZ);
-
-                    return components;
+                    return new Axis2Placement3DConvertable(axis2Placement3D, model);
                 case FaceBound faceBound:
-
-                    EdgeLoop faceBoundEdgeLoop = data[faceBound.EdgeLoopId] as EdgeLoop;
-
-                    components.Add(faceBoundEdgeLoop);
-
-                    return components;
+                    return new FaceBoundConvertable(faceBound, model);
                 case FaceOuterBound faceOuterBound:
-
-                    EdgeLoop faceOuterBoundEdgeLoop = data[faceOuterBound.EdgeLoopId] as EdgeLoop;
-
-                    components.Add(faceOuterBoundEdgeLoop);
-                    return components;
+                    return new FaceOuterBoundConvertable(faceOuterBound, model);
                 case Bound bound:
-                    return components;
+                    return new BoundConvertable(bound, model);
                 case BSplineCurveWithKnots bSplineCurveWithKnots:
-                    return components;
+                    break;
                 case DirectionPoint directionPoint:
-                    return components;
+                    break;
                 case CartesianPoint cartesianPoint:
-                    return components;
+                    break;
                 case Circle circle:
-                    Axis2Placement3D circleAxis2Placement3D = data[circle.PointId] as Axis2Placement3D;
-                    CartesianPoint circlePt = data[circleAxis2Placement3D.PointIds[0]] as CartesianPoint;
-                    DirectionPoint dir1 = data[circleAxis2Placement3D.PointIds[1]] as DirectionPoint;
-                    DirectionPoint dir2 = data[circleAxis2Placement3D.PointIds[2]] as DirectionPoint;
-
-                    components.Add(circleAxis2Placement3D);
-                    components.Add(circlePt);
-                    components.Add(dir1);
-                    components.Add(dir2);
-
-                    return components;
+                    return new CircleConvertable(circle, model);
                 case ClosedShell closedShell:
-                    return components;
+                    return new ClosedShellConveratable(closedShell, model);
                 case ConicalSurface conicalSurface:
-                    return components;
+                    break;
                 case CylindricalSurface cylindricalSurface:
-                    Axis2Placement3D cylinderAxis2Placement3D =
-                        data[cylindricalSurface.PointId] as Axis2Placement3D;
-                    CartesianPoint cylinderPt = data[cylinderAxis2Placement3D.PointIds[0]] as CartesianPoint;
-                    DirectionPoint cylinderDir1 = data[cylinderAxis2Placement3D.PointIds[1]] as DirectionPoint;
-                    DirectionPoint cylinderDir2 = data[cylinderAxis2Placement3D.PointIds[2]] as DirectionPoint;
-
-                    components.Add(cylindricalSurface);
-                    components.Add(cylinderAxis2Placement3D);
-                    components.Add(cylinderPt);
-                    components.Add(cylinderDir1);
-                    components.Add(cylinderDir2);
-                    return components;
+                    return new CylindricalSurfaceConvertable(cylindricalSurface, model);
                 case EdgeCurve edgeCurve:
-                    return components;
+                    return new EdgeCurveConvertable(edgeCurve, model);
                 case EdgeLoop edgeLoop:
-                    return components;
+                    return new EdgeLoopConvertable(edgeLoop, model);
                 case Line line:
-
-                    CartesianPoint linePt1 = data[line.Point1Id] as CartesianPoint;
-                    VectorPoint lineVecPt = data[line.Point2Id] as VectorPoint;
-                    DirectionPoint lineDirPt = data[lineVecPt.PointId] as DirectionPoint;
-
-
-                    //CartesianPoint lineEnd = lineStart + directionVector * (float)lineVecPt.Length;
-
-                    components.Add(linePt1);
-                    components.Add(lineVecPt);
-                    components.Add(lineDirPt);
-
-                    return components;
+                    return new LineConvertable(line, model);
                 case OrientedEdge orientedEdge:
-
-                    EdgeCurve orientedEdgeEdgeCurve = data[orientedEdge.PointIds[2]] as EdgeCurve;
-
-                    components.Add(orientedEdgeEdgeCurve);
-
-                    return components;
+                    return new OrientedEdgeConvertable(orientedEdge, model);
                 case Plane plane:
-                    return components;
+                    return new PlaneConvertable(plane, model);
                 case ToroidalSurface toroidalSurface:
-                    return components;
+                    break;
                 case Surface surface:
-                    return components;
+                    return new SurfaceConvertable(surface, model);
                 case VectorPoint vectorPoint:
-                    return components;
+                    break;
                 case VertexPoint vertexPoint:
-                    return components;
+                    break;
             }
 
-            return components;
+            return null;
+
         }
     }
 }

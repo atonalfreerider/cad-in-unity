@@ -11,6 +11,9 @@ namespace STPLoader.Implementation.Converter.Entity
         const double Thickness = 1;
         const double Sides = 4;
 
+        public Vector3 Start;
+        public Vector3 End;
+
         public LineConvertable(Line line, IStpModel model)
         {
             _line = line;
@@ -21,9 +24,11 @@ namespace STPLoader.Implementation.Converter.Entity
         void Init()
         {
             CartesianPoint s = _model.Get<CartesianPoint>(_line.Point1Id);
+            Start = s.Vector;
             VectorPoint e = _model.Get<VectorPoint>(_line.Point2Id);
             DirectionPoint direction = _model.Get<DirectionPoint>(e.PointId);
             Vector3 endVector = s.Vector + direction.Vector * (float)e.Length;
+            End = endVector;
             Vector3 x = new Vector3(1, 0, 0);
             Vector3 y = new Vector3(0, 1, 0);
             double ax = Math.Acos(Vector3.Dot(direction.Vector, x) / (direction.Vector.Norm * x.Norm));

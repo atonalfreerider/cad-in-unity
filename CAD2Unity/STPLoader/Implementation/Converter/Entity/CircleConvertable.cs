@@ -10,6 +10,11 @@ namespace STPLoader.Implementation.Converter.Entity
         readonly IStpModel _model;
         const int Sides = 64;
 
+        public Axis2Placement3DConvertable Axis2Placement3DConvertable { get; private set; }
+        public float Radius { get; private set; }
+        public float Yaw { get; private set; }
+        public float Pitch { get; private set; }
+
         public CircleConvertable(Circle circle, IStpModel model)
         {
             _circle = circle;
@@ -19,7 +24,9 @@ namespace STPLoader.Implementation.Converter.Entity
 
         void Init()
         {
+            Radius = (float)_circle.Radius;
             Axis2Placement3D placement = _model.Get<Axis2Placement3D>(_circle.PointId);
+            Axis2Placement3DConvertable = new Axis2Placement3DConvertable(placement, _model);
             CartesianPoint cartesianPoint = _model.Get<CartesianPoint>(placement.PointIds[0]);
             DirectionPoint direction = _model.Get<DirectionPoint>(placement.PointIds[1]);
 
@@ -29,22 +36,25 @@ namespace STPLoader.Implementation.Converter.Entity
             double ax = Math.Acos(Vector3.Dot(direction.Vector, x) / (direction.Vector.Norm * x.Norm));
             double ay = Math.Acos(Vector3.Dot(direction.Vector, y) / (direction.Vector.Norm * y.Norm));
 
-            Matrix3x3 rotationMatrix = Matrix3x3.CreateFromYawPitchRoll((float) (Math.PI / 2 - ax), (float) (Math.PI / 2 - ay), 0);
+            Yaw = (float)(Math.PI / 2 - ax);
+            Pitch = (float)(Math.PI / 2 - ay);
+            Matrix3x3 rotationMatrix = Matrix3x3.CreateFromYawPitchRoll(Yaw, Pitch, 0);
 
             for (int i = 0; i < Sides; i++)
             {
                 double angle = 360 - (i * 360d / Sides);
-                angle = angle*2*Math.PI/360d;
+                angle = angle * 2 * Math.PI / 360d;
                 // calculate point on unit circle and multiply by radius
                 Vector3 vector = new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0) * (float)_circle.Radius;
                 // change normal vector to direction vector
-                vector = rotationMatrix*vector;
+                vector = rotationMatrix * vector;
                 // add midpoint position vector
                 vector = vector + cartesianPoint.Vector;
                 Points.Add(vector);
             }
 
-            Indices = Enumerable.Range(1, Sides).Select(i => new int[]{0, i, (i % Sides)+1}).SelectMany(d => d).ToList();
+            Indices = Enumerable.Range(1, Sides).Select(i => new[] { 0, i, (i % Sides) + 1 }).SelectMany(d => d)
+                .ToList();
         }
 
         public IList<Vector3> Points { get; private set; }

@@ -9,6 +9,13 @@ namespace STPLoader.Implementation.Converter.Entity
         readonly CylindricalSurface _surface;
         readonly IStpModel _model;
         const int Sides = 64;
+        
+        public Axis2Placement3DConvertable Axis2Placement3DConvertable { get; private set; }
+        public float Radius { get; private set; }
+        public float Length { get; private set; }
+        
+        public float Yaw { get; private set; }
+        public float Pitch { get; private set; }
 
         public CylindricalSurfaceConvertable(Surface surface, IStpModel model)
         {
@@ -19,7 +26,10 @@ namespace STPLoader.Implementation.Converter.Entity
 
         void Init()
         {
+            Radius = (float)_surface.Radius;
+            Length = float.Parse(_surface.Data[2]);
             Axis2Placement3D placement = _model.Get<Axis2Placement3D>(_surface.PointId);
+            Axis2Placement3DConvertable = new Axis2Placement3DConvertable(placement, _model);
             CartesianPoint cartesianPoint = _model.Get<CartesianPoint>(placement.PointIds[0]);
             DirectionPoint direction = _model.Get<DirectionPoint>(placement.PointIds[1]);
             DirectionPoint directionX = _model.Get<DirectionPoint>(placement.PointIds[2]);
@@ -29,8 +39,11 @@ namespace STPLoader.Implementation.Converter.Entity
             Vector3 y = new Vector3(0, 1, 0);
             double ax = Math.Acos(Vector3.Dot(direction.Vector, x) / (direction.Vector.Norm * x.Norm));
             double ay = Math.Acos(Vector3.Dot(direction.Vector, y) / (direction.Vector.Norm * y.Norm));
+            
 
-            Matrix3x3 rotationMatrix = Matrix3x3.CreateFromYawPitchRoll((float)(Math.PI / 2 - ax), (float)(Math.PI / 2 - ay), 0);
+            Yaw = (float)(Math.PI / 2 - ax);
+            Pitch = (float)(Math.PI / 2 - ay);
+            Matrix3x3 rotationMatrix = Matrix3x3.CreateFromYawPitchRoll(Yaw, Pitch, 0);
 
             for (int i = 0; i < Sides; i++)
             {

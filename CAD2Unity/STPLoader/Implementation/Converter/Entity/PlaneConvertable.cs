@@ -4,7 +4,7 @@ using STPLoader.Interface;
 
 namespace STPLoader.Implementation.Converter.Entity
 {
-    class PlaneConvertable : IConvertable
+    public class PlaneConvertable : IConvertable
     {
         readonly Plane _surface;
         readonly IStpModel _model;

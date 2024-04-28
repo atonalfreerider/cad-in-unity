@@ -4,7 +4,7 @@ using STPLoader.Interface;
 
 namespace STPLoader.Implementation.Converter.Entity
 {
-    class BoundConvertable : IConvertable
+    public class BoundConvertable : IConvertable
     {
         public IList<Vector3> Points { get; private set; }
         public IList<int> Indices { get; private set; }
