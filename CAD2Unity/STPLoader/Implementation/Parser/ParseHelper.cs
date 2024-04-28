@@ -104,7 +104,7 @@ namespace STPLoader.Implementation.Parser
         public static IList<T> ParseList<T>(string listString)
         {
             // remove parenthesis
-            string? inner = listString.Remove(listString.Length - 1)[1..];
+            string? inner = listString.Remove(listString.Length - 1).Substring(1);
             return Regex.Split(inner, @",(?![^\(]*\))").Select(x => (T)Convert.ChangeType(x, typeof(T), CultureInfo.InvariantCulture)).ToList();
         }
 
@@ -150,8 +150,8 @@ namespace STPLoader.Implementation.Parser
 
             string? rightPart = splitted[1].Remove(splitted[1].IndexOf(';')).Trim();
             int positionOfList = rightPart.IndexOf('(');
-            string? type = rightPart[..positionOfList];
-            IList<string> list = ParseList(rightPart[positionOfList..]);
+            string? type = rightPart.Substring(0, positionOfList);
+            IList<string> list = ParseList(rightPart.Substring(positionOfList));
 
             return CreateEntity(type, id, list);
 	    }
@@ -184,7 +184,7 @@ namespace STPLoader.Implementation.Parser
         /// <returns></returns>
 	    public static long ParseId(string id)
 	    {
-		    return id is "$" or "*" ? 0 : long.Parse(id[1..]);
+		    return id is "$" or "*" ? 0 : long.Parse(id.Substring(1));
 	    }
 
         public static bool SpecificEntity(string entityName)

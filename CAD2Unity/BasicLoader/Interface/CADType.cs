@@ -18,7 +18,7 @@
 
         public static CADType FromFileExtension(string fileName)
         {
-            string extension = fileName[(fileName.LastIndexOf('.')+1)..];
+            string extension = fileName.Substring((fileName.LastIndexOf('.')+1));
             return map[extension.ToLower()];
         }
     }
