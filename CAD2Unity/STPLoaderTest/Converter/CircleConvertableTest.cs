@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using AForge.Math;
 using NUnit.Framework;
-using STPConverter.Implementation.Entity;
-using STPLoader;
-using STPLoader.Implementation.Model;
-using STPLoader.Implementation.Model.Entity;
-using STPLoader.Implementation.Parser;
 
 namespace STPLoaderTest.Converter
 {

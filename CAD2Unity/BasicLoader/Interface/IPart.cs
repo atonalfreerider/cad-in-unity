@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AForge.Math;
+﻿using AForge.Math;
 
 namespace BasicLoader.Interface
 {

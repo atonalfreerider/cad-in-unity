@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
 {
@@ -29,7 +27,7 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override string ToString()
         {
-            return String.Format("<Circle({0}, {1}, {2})", Info, PointId, Radius);
+            return $"<Circle({Info}, {PointId}, {Radius})";
         }
     }
 

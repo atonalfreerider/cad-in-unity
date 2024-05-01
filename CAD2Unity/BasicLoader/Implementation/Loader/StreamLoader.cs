@@ -1,5 +1,4 @@
-﻿using System.IO;
-using CADLoader;
+﻿using BasicLoader.Interface;
 
 namespace BasicLoader.Implementation.Loader
 {
@@ -11,7 +10,7 @@ namespace BasicLoader.Implementation.Loader
         /// <summary>
         /// 
         /// </summary>
-		private Stream _stream;
+        readonly Stream _stream;
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamLoader"/> class.
         /// </summary>

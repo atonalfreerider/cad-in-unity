@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
 {
@@ -22,7 +20,7 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override void Init()
         {
-            Info = ParseHelper.Parse<String>(Data[0]);
+            Info = ParseHelper.Parse<string>(Data[0]);
             EdgeLoopId = ParseHelper.ParseId(Data[1]);
             Boo = ParseHelper.Parse<bool>(Data[2]);
         }

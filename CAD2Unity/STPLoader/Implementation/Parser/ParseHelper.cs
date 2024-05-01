@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using STPLoader.Implementation.Model.Entity;
 
@@ -13,7 +9,7 @@ namespace STPLoader.Implementation.Parser
     /// </summary>
 	public static class ParseHelper
 	{
-        private static readonly IDictionary<string, Type> EntityTypes = new Dictionary<string, Type>()
+		static readonly IDictionary<string, Type> EntityTypes = new Dictionary<string, Type>()
         {
             {"CARTESIAN_POINT", typeof(CartesianPoint)},
             {"DIRECTION", typeof(DirectionPoint)},
@@ -46,13 +42,12 @@ namespace STPLoader.Implementation.Parser
 		public static Stream FindSection(Stream stream, string start, string end)
         {
             stream.Position = 0;
-			var ms = new MemoryStream();
-			var sw = new StreamWriter(ms);
-			var reader = new StreamReader(stream);
-			string line;
-			var inSection = false;
+			MemoryStream ms = new MemoryStream();
+			StreamWriter sw = new StreamWriter(ms);
+			StreamReader reader = new StreamReader(stream);
+			bool inSection = false;
 
-			while ((line = reader.ReadLine()) != null)
+			while (reader.ReadLine() is { } line)
 			{
 				if (line.Equals(start))
 				{
@@ -83,13 +78,12 @@ namespace STPLoader.Implementation.Parser
 	    public static IList<string> ParseHeaderLine(Stream stream, string lineStart)
         {
             stream.Position = 0;
-			var reader = new StreamReader(stream);
-			string line;
-	        while ((line = reader.ReadLine()) != null)
+			StreamReader reader = new StreamReader(stream);
+			while (reader.ReadLine() is { } line)
 	        {
 	            if (line.StartsWith(lineStart))
 	            {
-	                var listString = line.Substring(lineStart.Length, line.Length - lineStart.Length - 1);
+	                string? listString = line.Substring(lineStart.Length, line.Length - lineStart.Length - 1);
 	                return ParseList(listString);
 	            }
 	        }
@@ -110,7 +104,7 @@ namespace STPLoader.Implementation.Parser
         public static IList<T> ParseList<T>(string listString)
         {
             // remove parenthesis
-            var inner = listString.Remove(listString.Length - 1).Substring(1);
+            string? inner = listString.Remove(listString.Length - 1)[1..];
             return Regex.Split(inner, @",(?![^\(]*\))").Select(x => (T)Convert.ChangeType(x, typeof(T), CultureInfo.InvariantCulture)).ToList();
         }
 
@@ -134,10 +128,9 @@ namespace STPLoader.Implementation.Parser
 	    public static IEnumerable<string> ParseBody(Stream dataStream)
 	    {
             dataStream.Position = 0;
-            var reader = new StreamReader(dataStream);
+            StreamReader reader = new StreamReader(dataStream);
             IList<string> lines = new List<string>();
-	        string line;
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 lines.Add(line);
             }
@@ -151,23 +144,23 @@ namespace STPLoader.Implementation.Parser
         /// <returns></returns>
 	    public static Entity ParseBodyLine(string line)
         {
-            var splitted = line.Split('=');
+            string[]? splitted = line.Split('=');
             // remove = from id
-            var id = ParseId(splitted[0]);
+            long id = ParseId(splitted[0]);
 
-            var rightPart = splitted[1].Remove(splitted[1].IndexOf(';')).Trim();
-            var positionOfList = rightPart.IndexOf('(');
-            var type = rightPart.Substring(0, positionOfList);
-            var list = ParseList(rightPart.Substring(positionOfList));
+            string? rightPart = splitted[1].Remove(splitted[1].IndexOf(';')).Trim();
+            int positionOfList = rightPart.IndexOf('(');
+            string? type = rightPart[..positionOfList];
+            IList<string> list = ParseList(rightPart[positionOfList..]);
 
             return CreateEntity(type, id, list);
 	    }
 
-        private static Entity CreateEntity(string type, long id, IList<string> list)
+        static Entity CreateEntity(string type, long id, IList<string> list)
         {
             if (SpecificEntity(type))
             {
-                var entity = (Entity) Activator.CreateInstance(EntityTypes[type]);
+                Entity? entity = (Entity) Activator.CreateInstance(EntityTypes[type]);
                 entity.Id = id;
                 entity.Type = type;
                 entity.Data = list;
@@ -177,9 +170,9 @@ namespace STPLoader.Implementation.Parser
             return CreateEntity<Entity>(type, id, list);
         }
 
-        private static T CreateEntity<T>(string type, long id, IList<string> list) where T : Entity, new()
+        static T CreateEntity<T>(string type, long id, IList<string> list) where T : Entity, new()
         {
-            var entity = new T { Id = id, Type = type, Data = list };
+            T entity = new T { Id = id, Type = type, Data = list };
             entity.Init();
             return entity;
         }
@@ -191,11 +184,7 @@ namespace STPLoader.Implementation.Parser
         /// <returns></returns>
 	    public static long ParseId(string id)
 	    {
-            if (id == "$" || id == "*")
-            {
-                return 0;
-            }
-            return long.Parse(id.Substring(1));
+		    return id is "$" or "*" ? 0 : long.Parse(id[1..]);
 	    }
 
         public static bool SpecificEntity(string entityName)
@@ -213,21 +202,19 @@ namespace STPLoader.Implementation.Parser
             return data == ".T.";
         }
 
-        public static T Parse<T>(String data)
+        public static T Parse<T>(string data)
         {
-            var type = typeof (T);
+            Type type = typeof (T);
             if (type == typeof (bool))
             {
                 return (T)Convert.ChangeType(ParseBool(data), typeof(T), CultureInfo.InvariantCulture);
             }
-            else if (type == typeof (string))
+
+            if (type == typeof (string))
             {
-                return (T)Convert.ChangeType(ParseString(data), typeof(T), CultureInfo.InvariantCulture);
+	            return (T)Convert.ChangeType(ParseString(data), typeof(T), CultureInfo.InvariantCulture);
             }
-            else
-            {
-                return (T)Convert.ChangeType(data, typeof(T), CultureInfo.InvariantCulture);
-            }
+            return (T)Convert.ChangeType(data, typeof(T), CultureInfo.InvariantCulture);
         }
 	}
 

@@ -1,7 +1,6 @@
-﻿using STPLoader;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Converter;
 
-namespace STPConverter
+namespace STPLoader.Interface
 {
     public static class ConverterFactory
     {

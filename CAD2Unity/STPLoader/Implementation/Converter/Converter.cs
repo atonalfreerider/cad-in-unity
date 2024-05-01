@@ -1,44 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Math;
-using STPConverter.Implementation.Entity;
-using STPLoader;
+﻿using AForge.Math;
+using STPLoader.Implementation.Converter.Entity;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter
+namespace STPLoader.Implementation.Converter
 {
     class Converter : IConverter
     {
 
         public MeshModel Convert(IStpModel model)
         {
-            var vectors = new List<Vector3>();
-            var indices = new List<int>();
+            List<Vector3> vectors = new List<Vector3>();
+            List<int> indices = new List<int>();
 
             GetValue<ClosedShell>(model, indices, vectors);
-            var mesh = new MeshModel(vectors, indices);
+            MeshModel mesh = new MeshModel(vectors, indices);
 
             return mesh;
         }
 
-        private void GetValue<T>(IStpModel model, List<int> indices, List<Vector3> vectors) where T : Entity
+        void GetValue<T>(IStpModel model, List<int> indices, List<Vector3> vectors) where T : Model.Entity.Entity
         {
-            foreach (var element in model.All<T>())
+            foreach (T element in model.All<T>())
             {
-                var offset = vectors.Count;
-                var convertable = CreateConvertable(element, model);
-                var circleVectors = convertable.Points;
-                var circleIndices = convertable.Indices;
+                int offset = vectors.Count;
+                IConvertable convertable = CreateConvertable(element, model);
+                IList<Vector3> circleVectors = convertable.Points;
+                IList<int> circleIndices = convertable.Indices;
                 vectors.AddRange(circleVectors);
                 indices.AddRange(circleIndices.Select(x => x + offset));
             }
         }
 
-        private static IConvertable CreateConvertable<T>(T element, IStpModel model) where T : Entity
+        static IConvertable CreateConvertable<T>(T element, IStpModel model) where T : Model.Entity.Entity
         {
-            var type = typeof (T);
+            Type type = typeof (T);
             if (type == typeof(Circle))
             {
                 return new CircleConvertable(element as Circle, model);

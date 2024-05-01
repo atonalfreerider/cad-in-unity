@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace BasicLoader
+﻿namespace BasicLoader.Interface
 {
     public enum CADType
     {
@@ -14,7 +9,7 @@ namespace BasicLoader
 
     public static class CADTypeUtils
     {
-        private static IDictionary<string, CADType> map = new Dictionary<string, CADType>
+        static readonly IDictionary<string, CADType> map = new Dictionary<string, CADType>
         {
             {"stl", CADType.STL},
             {"stp", CADType.STP},
@@ -23,7 +18,7 @@ namespace BasicLoader
 
         public static CADType FromFileExtension(string fileName)
         {
-            var extension = fileName.Substring(fileName.LastIndexOf('.')+1);
+            string extension = fileName[(fileName.LastIndexOf('.')+1)..];
             return map[extension.ToLower()];
         }
     }

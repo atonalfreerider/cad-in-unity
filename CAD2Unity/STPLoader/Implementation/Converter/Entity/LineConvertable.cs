@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using AForge.Math;
-using STPLoader;
+﻿using AForge.Math;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     public class LineConvertable : IConvertable
     {
-        private readonly Line _line;
-        private readonly IStpModel _model;
-        private const double Thickness = 1;
-        private const double Sides = 4;
+        readonly Line _line;
+        readonly IStpModel _model;
+        const double Thickness = 1;
+        const double Sides = 4;
 
         public LineConvertable(Line line, IStpModel model)
         {
@@ -24,26 +18,26 @@ namespace STPConverter.Implementation.Entity
             Init();
         }
 
-        private void Init()
+        void Init()
         {
-            var s = _model.Get<CartesianPoint>(_line.Point1Id);
-            var e = _model.Get<VectorPoint>(_line.Point2Id);
-            var direction = _model.Get<DirectionPoint>(e.PointId);
-            var endVector = s.Vector + direction.Vector * (float)e.Length;
-            var x = new Vector3(1, 0, 0);
-            var y = new Vector3(0, 1, 0);
-            var ax = Math.Acos(Vector3.Dot(direction.Vector, x) / (direction.Vector.Norm * x.Norm));
-            var ay = Math.Acos(Vector3.Dot(direction.Vector, y) / (direction.Vector.Norm * y.Norm));
+            CartesianPoint s = _model.Get<CartesianPoint>(_line.Point1Id);
+            VectorPoint e = _model.Get<VectorPoint>(_line.Point2Id);
+            DirectionPoint direction = _model.Get<DirectionPoint>(e.PointId);
+            Vector3 endVector = s.Vector + direction.Vector * (float)e.Length;
+            Vector3 x = new Vector3(1, 0, 0);
+            Vector3 y = new Vector3(0, 1, 0);
+            double ax = Math.Acos(Vector3.Dot(direction.Vector, x) / (direction.Vector.Norm * x.Norm));
+            double ay = Math.Acos(Vector3.Dot(direction.Vector, y) / (direction.Vector.Norm * y.Norm));
 
             Points = new List<Vector3> { s.Vector };
-            var rotationMatrix = Matrix3x3.CreateFromYawPitchRoll((float)(Math.PI / 2 - ax), (float)(Math.PI / 2 - ay), 0);
+            Matrix3x3 rotationMatrix = Matrix3x3.CreateFromYawPitchRoll((float)(Math.PI / 2 - ax), (float)(Math.PI / 2 - ay), 0);
 
-            for (var i = 0; i < Sides; i++)
+            for (int i = 0; i < Sides; i++)
             {
-                var angle = 360 - (i * 360d / Sides);
+                double angle = 360 - (i * 360d / Sides);
                 angle = angle * 2 * Math.PI / 360d;
                 // calculate point on unit circle and multiply by radius
-                var vector = new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0) * (float)Thickness/2;
+                Vector3 vector = new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0) * (float)Thickness/2;
                 // change normal vector to direction vector
                 vector = rotationMatrix * vector;
                 // add midpoint position vector
@@ -52,12 +46,12 @@ namespace STPConverter.Implementation.Entity
             }
             Points.Add(endVector);
 
-            for (var i = 0; i < Sides; i++)
+            for (int i = 0; i < Sides; i++)
             {
-                var angle = 360 - (i * 360d / Sides);
+                double angle = 360 - (i * 360d / Sides);
                 angle = angle * 2 * Math.PI / 360d;
                 // calculate point on unit circle and multiply by radius
-                var vector = new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0) * (float)Thickness / 2;
+                Vector3 vector = new Vector3((float)Math.Cos(angle), (float)Math.Sin(angle), 0) * (float)Thickness / 2;
                 // change normal vector to direction vector
                 vector = rotationMatrix * vector;
                 // add midpoint position vector

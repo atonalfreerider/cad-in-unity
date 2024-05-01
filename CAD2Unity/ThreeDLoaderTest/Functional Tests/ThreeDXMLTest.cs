@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BasicLoader;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

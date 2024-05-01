@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Math;
+﻿using AForge.Math;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     interface IConvertable
     {

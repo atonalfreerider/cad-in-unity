@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
 {
@@ -26,7 +24,7 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override string ToString()
         {
-            return String.Format("<Axis2Placement3D({0}, {1})", Info, PointIds);
+            return $"<Axis2Placement3D({Info}, {PointIds})";
         }
     }
 

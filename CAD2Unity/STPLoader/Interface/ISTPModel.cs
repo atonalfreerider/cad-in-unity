@@ -1,11 +1,7 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
-using BasicLoader;
-using CADLoader;
+using BasicLoader.Interface;
 using STPLoader.Implementation.Model.Entity;
 
-namespace STPLoader
+namespace STPLoader.Interface
 {
     /// <summary>
     /// 

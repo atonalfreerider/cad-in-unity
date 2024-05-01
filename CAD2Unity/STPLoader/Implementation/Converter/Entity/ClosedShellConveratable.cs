@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AForge.Math;
-using STPLoader;
+﻿using AForge.Math;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     /// <summary>
     /// 
     /// </summary>
     public class ClosedShellConveratable : IConvertable
     {
-        private readonly ClosedShell _closedShell;
-        private readonly IStpModel _model;
+        readonly ClosedShell _closedShell;
+        readonly IStpModel _model;
 
         public ClosedShellConveratable(ClosedShell closedShell, IStpModel model)
         {
@@ -22,11 +19,11 @@ namespace STPConverter.Implementation.Entity
             Init();
         }
 
-        private void Init()
+        void Init()
         {
-            var faces = _closedShell.PointIds.Select(_model.Get<AdvancedFace>);
+            IEnumerable<AdvancedFace> faces = _closedShell.PointIds.Select(_model.Get<AdvancedFace>);
             // create convertable for all faces and merge points and indices
-            var convertables = faces.Select(face => new AdvancedFaceConvertable(face, _model)).Select(c => Tuple.New(c.Points, c.Indices));
+            IEnumerable<Tuple<IList<Vector3>, IList<int>>> convertables = faces.Select(face => new AdvancedFaceConvertable(face, _model)).Select(c => Tuple.New(c.Points, c.Indices));
 
             Points = convertables.Select(c => c.First).SelectMany(p => p).ToList();
             Indices = convertables.Aggregate(Tuple.New(0, new List<int>()), Tuple.AggregateIndices).Second;

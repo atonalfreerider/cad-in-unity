@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Math;
-using STPLoader;
+﻿using AForge.Math;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     class PlaneConvertable : IConvertable
     {
-        private readonly Plane _surface;
-        private readonly IStpModel _model;
+        readonly Plane _surface;
+        readonly IStpModel _model;
 
         public PlaneConvertable(Surface surface, IStpModel model)
         {
@@ -20,7 +16,7 @@ namespace STPConverter.Implementation.Entity
             Init();
         }
 
-        private void Init()
+        void Init()
         {
             //var planeAxis = _model.Get<Axis2Placement3D>(_surface.AxisId);
             

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Math;
-using STPLoader;
+﻿using AForge.Math;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     class SurfaceConvertable : IConvertable
     {
-        private readonly Surface _surface;
-        private readonly IStpModel _model;
+        readonly Surface _surface;
+        readonly IStpModel _model;
 
         public SurfaceConvertable(Surface surface, IStpModel model)
         {
@@ -20,31 +16,33 @@ namespace STPConverter.Implementation.Entity
             Init();
         }
 
-        private void Init()
+        void Init()
         {
-            var child = Convertable(_surface, _model);
+            IConvertable child = Convertable(_surface, _model);
             Points = child.Points;
             Indices = child.Indices;
         }
 
-        private static IConvertable Convertable(Surface surface, IStpModel model)
+        static IConvertable Convertable(Surface surface, IStpModel model)
         {
             if (surface.GetType() == typeof (CylindricalSurface))
             {
                 return new CylindricalSurfaceConvertable(surface, model);
             }
-            else if (surface.GetType() == typeof(ConicalSurface))
+
+            if (surface.GetType() == typeof(ConicalSurface))
             {
                 return new ConicalSurfaceConvertable(surface, model);
             }
-            else if (surface.GetType() == typeof(Plane))
+            if (surface.GetType() == typeof(Plane))
             {
                 return new PlaneConvertable(surface, model);
             }
-            else if (surface.GetType() == typeof(ToroidalSurface))
+            if (surface.GetType() == typeof(ToroidalSurface))
             {
                 return new ToroidalSurfaceConvertable(surface, model);
             }
+
             throw new Exception("No convertable found!");
         }
 
@@ -52,10 +50,10 @@ namespace STPConverter.Implementation.Entity
         public IList<int> Indices { get; private set; }
     }
 
-    internal class ToroidalSurfaceConvertable : IConvertable
+    class ToroidalSurfaceConvertable : IConvertable
     {
-        private readonly Surface _surface;
-        private readonly IStpModel _model;
+        readonly Surface _surface;
+        readonly IStpModel _model;
 
         public ToroidalSurfaceConvertable(Surface surface, IStpModel model)
         {
@@ -64,7 +62,7 @@ namespace STPConverter.Implementation.Entity
             Init();
         }
 
-        private void Init()
+        void Init()
         {
             Points = new List<Vector3>();
             Indices = new List<int>();
@@ -74,11 +72,11 @@ namespace STPConverter.Implementation.Entity
         public IList<Vector3> Points { get; private set; }
         public IList<int> Indices { get; private set; }
     }
-    
-    internal class ConicalSurfaceConvertable : IConvertable
+
+    class ConicalSurfaceConvertable : IConvertable
     {
-        private readonly Surface _surface;
-        private readonly IStpModel _model;
+        readonly Surface _surface;
+        readonly IStpModel _model;
 
         public ConicalSurfaceConvertable(Surface surface, IStpModel model)
         {
@@ -87,7 +85,7 @@ namespace STPConverter.Implementation.Entity
             Init();
         }
 
-        private void Init()
+        void Init()
         {
             Points = new List<Vector3>();
             Indices = new List<int>();

@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Xml.Linq;
-using BasicLoader;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ThreeDXMLLoader.Implementation.Model;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ThreeDXMLLoader.Implementation.Parser;
 
 namespace ThreeDXMLLoaderTest

@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using BasicLoader;
-
-namespace BasicLoader
+﻿namespace BasicLoader.Interface
 {
     /// <summary>
     /// I parser.

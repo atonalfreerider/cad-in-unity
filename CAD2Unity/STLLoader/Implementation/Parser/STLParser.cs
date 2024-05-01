@@ -2,7 +2,6 @@
 using System.Linq;
 using BasicLoader;
 using BasicLoader.Implementation.Model;
-using CADLoader;
 using STLLoader.Implementation.Parser;
 
 namespace STLLoader

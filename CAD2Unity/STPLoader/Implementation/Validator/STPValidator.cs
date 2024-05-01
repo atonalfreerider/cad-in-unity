@@ -1,7 +1,6 @@
-﻿using System;
-using BasicLoader;
-using CADLoader;
+﻿using BasicLoader.Interface;
 using STPLoader.Implementation.Parser;
+using STPLoader.Interface;
 
 namespace STPLoader.Implementation.Validator
 {
@@ -10,7 +9,7 @@ namespace STPLoader.Implementation.Validator
 	/// </summary>
 	class StpValidator : IValidator
 	{
-		private IParser _parser;
+		readonly IParser _parser;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="StpValidator"/> class.

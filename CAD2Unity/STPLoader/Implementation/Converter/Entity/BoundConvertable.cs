@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AForge.Math;
-using STPLoader;
+﻿using AForge.Math;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     class BoundConvertable : IConvertable
     {
         public IList<Vector3> Points { get; private set; }
         public IList<int> Indices { get; private set; }
 
-        private readonly Bound _bound;
-        private readonly IStpModel _model;
+        readonly Bound _bound;
+        readonly IStpModel _model;
 
         public BoundConvertable(Bound bound, IStpModel model)
         {
@@ -22,8 +18,8 @@ namespace STPConverter.Implementation.Entity
             _model = model;
             Init();
         }
-        
-        private void Init()
+
+        void Init()
         {
             //var loop = _model.Get<EdgeLoop>(_bound.EdgeLoopId);
 

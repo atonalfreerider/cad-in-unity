@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace STPLoader.Implementation.Model.Entity
+﻿namespace STPLoader.Implementation.Model.Entity
 {
     /// <summary>
     /// 
@@ -27,7 +23,7 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override string ToString()
         {
-            return String.Format("<Entity({0}, {1}, {2})>", Id, Type, String.Join(", ", Data.ToArray()));
+            return $"<Entity({Id}, {Type}, {string.Join(", ", Data.ToArray())})>";
         }
 
         public virtual void Init()

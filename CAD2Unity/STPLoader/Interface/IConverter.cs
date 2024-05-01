@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using STPLoader;
-
-namespace STPConverter
+﻿namespace STPLoader.Interface
 {
     public interface IConverter
     {

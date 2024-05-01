@@ -1,10 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net.Security;
-using BasicLoader;
-using CADLoader;
+﻿using BasicLoader.Interface;
 using STPLoader.Implementation.Model;
+using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
 namespace STPLoader.Implementation.Parser
 {
@@ -33,10 +30,10 @@ namespace STPLoader.Implementation.Parser
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        private Stream FindData(Stream stream)
+        Stream FindData(Stream stream)
         {
-            var start = "DATA;";
-            var end = "ENDSEC;";
+            string start = "DATA;";
+            string end = "ENDSEC;";
 
 			return ParseHelper.FindSection(stream, start, end);
         }
@@ -46,10 +43,10 @@ namespace STPLoader.Implementation.Parser
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        private Stream FindHeader(Stream stream)
+        Stream FindHeader(Stream stream)
         {
-            var start = "HEADER;";
-            var end = "ENDSEC;";
+            string start = "HEADER;";
+            string end = "ENDSEC;";
 
 			return ParseHelper.FindSection(stream, start, end);
         }
@@ -59,23 +56,20 @@ namespace STPLoader.Implementation.Parser
             throw new NotImplementedException();
         }
 
-        public CADType CAD
-        {
-            get { return CADType.STP; }
-        }
+        public CADType CAD => CADType.STP;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="dataStream"></param>
         /// <returns></returns>
-        private StpData ParseData(Stream dataStream)
+        StpData ParseData(Stream dataStream)
         {
             try
             {
-                var lines = ParseHelper.ParseBody(dataStream);
+                IEnumerable<string> lines = ParseHelper.ParseBody(dataStream);
 
-                var entities = lines.Select(ParseHelper.ParseBodyLine);
+                IEnumerable<Entity> entities = lines.Select(ParseHelper.ParseBodyLine);
                 return new StpData(entities.ToDictionary(entity => entity.Id));
             }
             catch (Exception e)
@@ -89,15 +83,15 @@ namespace STPLoader.Implementation.Parser
         /// </summary>
         /// <param name="headerStream"></param>
         /// <returns></returns>
-        private StpHeader ParseHeader(Stream headerStream)
+        StpHeader ParseHeader(Stream headerStream)
         {
-			var header = new StpHeader ();
-            var descriptionList = ParseHelper.ParseHeaderLine(headerStream, "FILE_DESCRIPTION");
+			StpHeader header = new StpHeader ();
+            IList<string> descriptionList = ParseHelper.ParseHeaderLine(headerStream, "FILE_DESCRIPTION");
             header.Description = new FileDescription(ParseHelper.ParseList(descriptionList[0]), descriptionList[1]);
-            var nameList = ParseHelper.ParseHeaderLine(headerStream, "FILE_NAME");
+            IList<string> nameList = ParseHelper.ParseHeaderLine(headerStream, "FILE_NAME");
             header.Name = new FileName(nameList[0], ParseHelper.ParseDate(nameList[1]), 
                 ParseHelper.ParseList(nameList[2]), ParseHelper.ParseList(nameList[3]), nameList[4], nameList[5], nameList[6]);
-            var schemaList = ParseHelper.ParseHeaderLine(headerStream, "FILE_SCHEMA");
+            IList<string> schemaList = ParseHelper.ParseHeaderLine(headerStream, "FILE_SCHEMA");
             header.Schema = new FileSchema(ParseHelper.ParseList(schemaList[0]));
 			return header;
         }

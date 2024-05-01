@@ -1,5 +1,4 @@
-﻿using System;
-using AForge.Math;
+﻿using AForge.Math;
 using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
@@ -12,13 +11,13 @@ namespace STPLoader.Implementation.Model.Entity
         public override void Init()
         {
             Info = ParseHelper.ParseString(Data[0]);
-            var coord = ParseHelper.ParseList<float>(Data[1]);
+            IList<float> coord = ParseHelper.ParseList<float>(Data[1]);
             Vector = new Vector3(coord[0], coord[1], coord[2]);
         }
 
         public override string ToString()
         {
-            return String.Format("<CartesianPoint({0}, {1})", Info, Vector);
+            return $"<CartesianPoint({Info}, {Vector})";
         }
     }
 }

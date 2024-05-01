@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
 {
@@ -54,7 +50,8 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override string ToString()
         {
-            return String.Format("<BSplineCurveWithKnots({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})", Info, Number, PointIds, Boo1, Boo2, Boo3, List1, List2, Boo4);
+            return
+                $"<BSplineCurveWithKnots({Info}, {Number}, {PointIds}, {Boo1}, {Boo2}, {Boo3}, {List1}, {List2}, {Boo4})";
         }
     }
 

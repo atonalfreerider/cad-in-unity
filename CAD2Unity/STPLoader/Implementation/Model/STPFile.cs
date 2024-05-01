@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using AForge.Math;
-using BasicLoader;
+using BasicLoader.Implementation.Model;
 using BasicLoader.Interface;
-using CADLoader;
-using CADLoader.Implementation.Parser;
+using STPLoader.Interface;
 
 namespace STPLoader.Implementation.Model
 {
@@ -13,93 +10,58 @@ namespace STPLoader.Implementation.Model
     /// </summary>
     public class StpFile : IStpModel
 	{
-        /// <summary>
-        /// 
-        /// </summary>
-		private StpHeader _header;
-        /// <summary>
-        /// 
-        /// </summary>
-		private StpData _data;
-
-        private readonly IList<Facet> _facets;
-        private readonly IList<Vector3> _vertices;
-        private readonly IList<int> _triangles;
-        private readonly IList<IPart> _parts;
+        readonly IList<IPart> _parts;
 
         /// <summary>
         /// 
         /// </summary>
-	    public StpHeader Header
-	    {
-	        get { return _header; }
-            set { _header = value; }
-	    }
+	    public StpHeader Header { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public StpData Data
-        {
-            get { return _data; }
-            set { _data = value; }
-        }
+        public StpData Data { get; set; }
 
         public override string ToString()
         {
-            return String.Format("<StpFile({0}, {1})>", Header, Data);
+            return $"<StpFile({Header}, {Data})>";
         }
 
         public IList<T> All<T>() where T : Entity.Entity
         {
-            return _data.All<T>();
+            return Data.All<T>();
         }
 
         public IDictionary<long, Entity.Entity> All()
         {
-            return _data.All();
+            return Data.All();
         }
 
         public Entity.Entity Get(long id)
         {
-            return _data.Get(id);
+            return Data.Get(id);
         }
 
         public T Get<T>(long id) where T : Entity.Entity
         {
-            return _data.Get<T>(id);
+            return Data.Get<T>(id);
         }
         
-        public IList<IPart> Parts
-        {
-            get { return _parts; }
-        }
-        
+        public IList<IPart> Parts => _parts;
+
         public IConstraint GetConstraint(IModel a, IModel b)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Facet> Facets
-        {
-            get { return _facets; }
-        }
+        public IList<Facet> Facets { get; }
 
-        public IList<Vector3> Vertices
-        {
-            get { return _vertices; }
-        }
+        public IList<Vector3> Vertices { get; }
 
-        public IList<int> Triangles
-        {
-            get { return _triangles; }
-        }
+        public IList<int> Triangles { get; }
 
-        public string Name
-        {
-            get { return Header.Name.Name; }
-        }
-	}
+        public string Name => Header.Name.Name;
+    }
 
 }
 

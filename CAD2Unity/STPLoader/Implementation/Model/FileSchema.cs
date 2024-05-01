@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace STPLoader.Implementation.Model
+﻿namespace STPLoader.Implementation.Model
 {
     /// <summary>
     /// 
@@ -25,7 +20,7 @@ namespace STPLoader.Implementation.Model
 
         public override string ToString()
         {
-            return String.Format("<FileSchema({0})>", Schemas);
+            return $"<FileSchema({Schemas})>";
         }
     }
 }

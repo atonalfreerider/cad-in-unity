@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using NUnit.Framework;
-using STPLoader.Implementation.Parser;
+﻿using NUnit.Framework;
 
 namespace STPLoaderTest
 {

@@ -1,14 +1,12 @@
-using System;
-
-namespace STPLoader
+namespace STPLoader.Interface
 {
 	/// <summary>
 	/// Validation result.
 	/// </summary>
 	public class ValidationResult
 	{
-		private bool _valid;
-		private string _message;
+		readonly bool _valid;
+		readonly string _message;
         /// <summary>
         /// 
         /// </summary>
@@ -22,7 +20,7 @@ namespace STPLoader
 
 	    public override string ToString()
 	    {
-	        return String.Format("<ValidationResult({0}, {1})>", _valid, _message);
+	        return $"<ValidationResult({_valid}, {_message})>";
 	    }
 	}
 

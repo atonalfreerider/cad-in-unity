@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace STPLoader.Implementation.Model
+﻿namespace STPLoader.Implementation.Model
 {
     /// <summary>
     /// 
     /// </summary>
     public class StpData
     {
-        private IDictionary<long, Entity.Entity> _entities;
+        readonly IDictionary<long, Entity.Entity> _entities;
 
         /// <summary>
         /// 
@@ -43,13 +38,14 @@ namespace STPLoader.Implementation.Model
 
         public T Get<T>(long id) where T : Entity.Entity
         {
-            var entity = _entities[id];
+            Entity.Entity entity = _entities[id];
             return entity as T;
         }
 
         public override string ToString()
         {
-            return String.Format("<StpData({0})>", String.Join(",\n", _entities.Select(pair => String.Format("{0} => {1}", pair.Key, pair.Value)).ToArray()));
+            return
+                $"<StpData({string.Join(",\n", _entities.Select(pair => $"{pair.Key} => {pair.Value}").ToArray())})>";
         }
     }
 }

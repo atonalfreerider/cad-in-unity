@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using AForge.Math;
-using STPLoader;
+﻿using AForge.Math;
 using STPLoader.Implementation.Model.Entity;
+using STPLoader.Interface;
 
-namespace STPConverter.Implementation.Entity
+namespace STPLoader.Implementation.Converter.Entity
 {
     /// <summary>
     /// 
     /// </summary>
     public class AdvancedFaceConvertable : IConvertable
     {
-        private readonly AdvancedFace _face;
-        private readonly IStpModel _model;
+        readonly AdvancedFace _face;
+        readonly IStpModel _model;
 
         public AdvancedFaceConvertable(AdvancedFace face, IStpModel model)
         {
@@ -24,14 +18,14 @@ namespace STPConverter.Implementation.Entity
             _model = model;
             Init();
         }
-        
-        private void Init()
+
+        void Init()
         {
-            var bounds = _face.BoundIds.Select(_model.Get<Bound>);
-            var surface = _model.Get<Surface>(_face.SurfaceId);
-            var surfaceConvertable = new SurfaceConvertable(surface, _model);
+            IEnumerable<Bound> bounds = _face.BoundIds.Select(_model.Get<Bound>);
+            Surface surface = _model.Get<Surface>(_face.SurfaceId);
+            SurfaceConvertable surfaceConvertable = new SurfaceConvertable(surface, _model);
             // create convertable for all faces and merge points and indices
-            var convertables = bounds.Select(bound => new BoundConvertable(bound, _model)).Select(c => Tuple.New(c.Points, c.Indices)).ToList();
+            List<Tuple<IList<Vector3>, IList<int>>> convertables = bounds.Select(bound => new BoundConvertable(bound, _model)).Select(c => Tuple.New(c.Points, c.Indices)).ToList();
             convertables.Add(Tuple.New(surfaceConvertable.Points, surfaceConvertable.Indices));
 
             Points = convertables.Select(c => c.First).SelectMany(p => p).ToList();

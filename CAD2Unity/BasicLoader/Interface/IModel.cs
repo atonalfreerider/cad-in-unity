@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using AForge.Math;
-using BasicLoader.Interface;
-using CADLoader.Implementation.Parser;
+﻿using AForge.Math;
+using BasicLoader.Implementation.Model;
 
-namespace BasicLoader
+namespace BasicLoader.Interface
 {
     /// <summary>
     /// 

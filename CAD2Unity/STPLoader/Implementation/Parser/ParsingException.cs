@@ -1,5 +1,3 @@
-using System;
-
 namespace STPLoader.Implementation.Parser
 {
     /// <summary>

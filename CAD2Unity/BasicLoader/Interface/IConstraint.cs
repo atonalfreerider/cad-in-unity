@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace BasicLoader.Interface
+﻿namespace BasicLoader.Interface
 {
     public interface IConstraint
     {

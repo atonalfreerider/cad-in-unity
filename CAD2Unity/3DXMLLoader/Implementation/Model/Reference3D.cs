@@ -1,8 +1,4 @@
-﻿using System;
-using System.Runtime.Remoting.Messaging;
-using System.Xml.Linq;
-
-namespace ThreeDXMLLoader.Implementation.Model
+﻿namespace ThreeDXMLLoader.Implementation.Model
 {
     public class Reference3D
     {

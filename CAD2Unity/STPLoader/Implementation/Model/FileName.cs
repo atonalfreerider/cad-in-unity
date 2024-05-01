@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace STPLoader.Implementation.Model
+﻿namespace STPLoader.Implementation.Model
 {
     public class FileName
     {
@@ -57,7 +54,8 @@ namespace STPLoader.Implementation.Model
 
         public override string ToString()
         {
-            return String.Format("<FileName({0}, {1}, {2}, {3}, {4}, {5}, {6})>", Name, TimeStamp, Author, Organization, PreprocessorVersion, OriginatingSystem, Authorization);
+            return
+                $"<FileName({Name}, {TimeStamp}, {Author}, {Organization}, {PreprocessorVersion}, {OriginatingSystem}, {Authorization})>";
         }
     }
 }

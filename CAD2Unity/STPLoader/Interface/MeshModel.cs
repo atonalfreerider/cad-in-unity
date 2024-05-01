@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using AForge.Math;
 
-namespace STPConverter
+namespace STPLoader.Interface
 {
     public class MeshModel
     {
         public string Meta;
-        private readonly IList<Vector3> _points;
-        private readonly IList<int> _triangles;
+        readonly IList<Vector3> _points;
+        readonly IList<int> _triangles;
 
         public MeshModel(IList<Vector3> points, IList<int> triangles)
         {
@@ -18,21 +15,15 @@ namespace STPConverter
             _triangles = triangles;
         }
 
-        public IList<Vector3> Points
-        {
-            get { return _points; }
-        }
+        public IList<Vector3> Points => _points;
 
-        public IList<int> Triangles
-        {
-            get { return _triangles; }
-        }
+        public IList<int> Triangles => _triangles;
 
         public override string ToString()
         {
-            return String.Format("<MeshModel({0}, {1})>",
-                String.Join("|", Points.Select(x => x.ToString()).ToArray()),
-                String.Join("|", Triangles.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray()));
+            return string.Format("<MeshModel({0}, {1})>",
+                string.Join("|", Points.Select(x => x.ToString()).ToArray()),
+                string.Join("|", Triangles.Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray()));
         }
     }
 }

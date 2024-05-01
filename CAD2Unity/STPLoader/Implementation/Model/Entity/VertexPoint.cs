@@ -1,5 +1,4 @@
-﻿using System;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
 {
@@ -16,7 +15,7 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override string ToString()
         {
-            return String.Format("<VertexPoint({0}, {1})", Info, PointId);
+            return $"<VertexPoint({Info}, {PointId})";
         }
     }
 

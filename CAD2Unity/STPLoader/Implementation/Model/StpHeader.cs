@@ -1,5 +1,3 @@
-using System;
-
 namespace STPLoader.Implementation.Model
 {
     /// <summary>
@@ -22,7 +20,7 @@ namespace STPLoader.Implementation.Model
 
         public override string ToString()
         {
-            return String.Format("<StpHeader({0}, {1}, {2})>", Description, Name, Schema);
+            return $"<StpHeader({Description}, {Name}, {Schema})>";
         }
     }
 }

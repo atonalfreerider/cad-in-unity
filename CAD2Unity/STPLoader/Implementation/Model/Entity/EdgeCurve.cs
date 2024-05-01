@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 
 namespace STPLoader.Implementation.Model.Entity
 {
@@ -30,7 +26,7 @@ namespace STPLoader.Implementation.Model.Entity
 
         public override string ToString()
         {
-            return String.Format("<EdgeCurve({0}, {1}, {2})", Info, PointIds, Boo);
+            return $"<EdgeCurve({Info}, {PointIds}, {Boo})";
         }
     }
 

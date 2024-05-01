@@ -1,8 +1,7 @@
-﻿using System;
-using STPLoader.Implementation.Parser;
+﻿using STPLoader.Implementation.Parser;
 using STPLoader.Implementation.Validator;
 
-namespace STPLoader
+namespace STPLoader.Interface
 {
     /// <summary>
     /// 

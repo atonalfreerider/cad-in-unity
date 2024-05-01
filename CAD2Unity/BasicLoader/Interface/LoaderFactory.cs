@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using BasicLoader.Implementation.Loader;
+﻿using BasicLoader.Implementation.Loader;
 using Microsoft.Win32.SafeHandles;
 
-namespace BasicLoader
+namespace BasicLoader.Interface
 {
 	/// <summary>
 	/// Loader factory.

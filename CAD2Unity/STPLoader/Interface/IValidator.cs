@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace STPLoader
+﻿namespace STPLoader.Interface
 {
 	/// <summary>
 	/// I validator.
